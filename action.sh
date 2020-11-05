@@ -33,7 +33,16 @@ git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 git add .
 git status | grep "nothing to commit"
 if [ $? -eq 0 ]; then
+    echo "nothing to commit"
     exit 0
 fi
 git commit -am "🚀 Deploy with ${GITHUB_WORKFLOW}"
+if [ $? != 0 ]; then
+    echo "commit failed"
+    exit 1
+fi
 git push -f -q https://${TOKEN}@github.com/${REMOTE} master
+if [ $? != 0 ]; then
+    echo "push failed"
+    exit 1
+fi
